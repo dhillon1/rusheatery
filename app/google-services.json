@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "272714160937",
+    "firebase_url": "https://rusheatery-328b6.firebaseio.com",
+    "project_id": "rusheatery-328b6",
+    "storage_bucket": "rusheatery-328b6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:272714160937:android:3431b84d181089472b3538",
+        "android_client_info": {
+          "package_name": "com.example.rusheatery"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "272714160937-46ljdvlcc8vmrjbh8gn30pahn2g8usa0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAy2YixWs7_YvT3Jy1Dxl_rSLfPemGpZVI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "272714160937-46ljdvlcc8vmrjbh8gn30pahn2g8usa0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
