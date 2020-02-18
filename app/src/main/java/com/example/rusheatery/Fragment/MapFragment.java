@@ -1,9 +1,15 @@
 package com.example.rusheatery.Fragment;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,10 +55,12 @@ public class MapFragment extends Fragment {
     private Button searchButton;
     private TextView resetFilters;
     private RecyclerView recyclerViewList;
+    private static final int REQUEST_LOCATION_PERMISSION = 1;
     private ProgressBar progressBarMain;
+    private GoogleMap googleMap;
     private MapView map;
     public static ArrayList<restaurantList> list;
-    private Marker m1,m2,m3,m4;
+    private Marker m1, m2, m3, m4;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,7 +73,9 @@ public class MapFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         return inflater.inflate(R.layout.fragment_map, container, false);
+
     }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -74,6 +85,20 @@ public class MapFragment extends Fragment {
         search = view.findViewById(R.id.searchMap);
         searchButton = view.findViewById(R.id.searchButtonMap);
         resetFilters = view.findViewById(R.id.resetFiltersMap);
+
+//        RadioGroup RG = view.findViewById(R.id.rg_view);
+//
+//        RG.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(RadioGroup group, int checkedId) {
+//                if (checkedId == R.id.rb_normal){
+//                    googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+//                } else if (checkedId == R.id.rb_satellite){
+//                    googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+//                }
+//            }
+//        });
+        enableMyLocation();
 
         list = new ArrayList<>();
         Menu menu = bottomNavigationView.getMenu();
@@ -85,11 +110,22 @@ public class MapFragment extends Fragment {
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 googleMap.getUiSettings().setZoomControlsEnabled(true);
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(43.828536,-79.242987),4));
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(43.828536, -79.242987), 9));
 
             }
         });
 
+    }
+
+    private void enableMyLocation() {
+
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            googleMap.setMyLocationEnabled(true);
+        } else {
+            ActivityCompat.requestPermissions(getActivity(), new String[]
+                            {Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_LOCATION_PERMISSION);
+        }
     }
 
     @Override
@@ -103,45 +139,46 @@ public class MapFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull final Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            if(task.getResult().size()==0){
+                            if (task.getResult().size() == 0) {
                                 //TODO
 
 
                                 progressBarMain.setVisibility(View.GONE);
-                            }else{
+                            } else {
                                 mapFragment.getMapAsync(new OnMapReadyCallback() {
                                     @Override
                                     public void onMapReady(final GoogleMap googleMap) {
                                         googleMap.clear();
 
                                         for (QueryDocumentSnapshot document : task.getResult()) {
-                                            list.add(new restaurantList(String.valueOf(document.get("name")),String.valueOf(document.get("lat")),String.valueOf(document.get("lon")),String.valueOf(document.get("rate"))));
+                                            list.add(new restaurantList(String.valueOf(document.get("name")), String.valueOf(document.get("lat")), String.valueOf(document.get("lon")), String.valueOf(document.get("rate"))));
                                             progressBarMain.setVisibility(View.GONE);
-                                            googleMap.addMarker(new MarkerOptions().position(new LatLng(Double.valueOf(String.valueOf(document.get("lat"))),Double.valueOf(String.valueOf(document.get("lon")))))).setTag(String.valueOf(document.get("name")));
+                                            googleMap.addMarker(new MarkerOptions().position(new LatLng(Double.valueOf(String.valueOf(document.get("lat"))), Double.valueOf(String.valueOf(document.get("lon")))))).setTag(String.valueOf(document.get("name")));
 
                                         }
 
                                         googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                                             @Override
                                             public boolean onMarkerClick(Marker marker) {
-                                                if(marker.getTag() == "Tim Hortons"){
-                                                    InfoWindow infoWindow = new InfoWindow(getActivity(),"Tim Hortons");
-                                                    googleMap.setInfoWindowAdapter(infoWindow);
-                                                    marker.showInfoWindow();
 
-                                                }
-                                                else if(marker.getTag() == "McDonalds"){
-                                                    InfoWindow infoWindow = new InfoWindow(getActivity(),"McDonalds");
+                                                Toast.makeText(getActivity(), "Marker Click", Toast.LENGTH_LONG).show();
+
+                                                if (marker.getTag() == "Tim Hortons") {
+                                                    InfoWindow infoWindow = new InfoWindow(getActivity(), "Tim Hortons");
                                                     googleMap.setInfoWindowAdapter(infoWindow);
                                                     marker.showInfoWindow();
-                                                }
-                                                else if(marker.getTag() == "Pizza Pizza"){
-                                                    InfoWindow infoWindow = new InfoWindow(getActivity(),"Pizza Pizza");
+                                                    //googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(infoWindow,12F));
+
+                                                } else if (marker.getTag() == "McDonalds") {
+                                                    InfoWindow infoWindow = new InfoWindow(getActivity(), "McDonalds");
                                                     googleMap.setInfoWindowAdapter(infoWindow);
                                                     marker.showInfoWindow();
-                                                }
-                                                else if(marker.getTag() == "Starbucks"){
-                                                    InfoWindow infoWindow = new InfoWindow(getActivity(),"Starbucks");
+                                                } else if (marker.getTag() == "Pizza Pizza") {
+                                                    InfoWindow infoWindow = new InfoWindow(getActivity(), "Pizza Pizza");
+                                                    googleMap.setInfoWindowAdapter(infoWindow);
+                                                    marker.showInfoWindow();
+                                                } else if (marker.getTag() == "Starbucks") {
+                                                    InfoWindow infoWindow = new InfoWindow(getActivity(), "Starbucks");
                                                     googleMap.setInfoWindowAdapter(infoWindow);
                                                     marker.showInfoWindow();
                                                 }
@@ -150,12 +187,8 @@ public class MapFragment extends Fragment {
                                         });
 
 
-
                                     }
                                 });
-
-
-
 
 
                             }
@@ -183,7 +216,7 @@ public class MapFragment extends Fragment {
                             public void onComplete(@NonNull final Task<QuerySnapshot> task) {
                                 if (task.isSuccessful()) {
                                     list.clear();
-                                    if(task.getResult().size()==0){
+                                    if (task.getResult().size() == 0) {
                                         //TODO
                                         list.clear();
                                         mapFragment.getMapAsync(new OnMapReadyCallback() {
@@ -192,50 +225,46 @@ public class MapFragment extends Fragment {
                                                 googleMap.clear();
                                             }
                                         });
-                                        Toast.makeText(getActivity(),"No record found",Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getActivity(), "No record found", Toast.LENGTH_SHORT).show();
 
                                         progressBarMain.setVisibility(View.GONE);
-                                    }else{
+                                    } else {
                                         mapFragment.getMapAsync(new OnMapReadyCallback() {
                                             @Override
                                             public void onMapReady(final GoogleMap googleMap) {
                                                 googleMap.clear();
 
                                                 for (QueryDocumentSnapshot document : task.getResult()) {
-                                                    list.add(new restaurantList(String.valueOf(document.get("name")),String.valueOf(document.get("lat")),String.valueOf(document.get("lon")),String.valueOf(document.get("rate"))));
+                                                    list.add(new restaurantList(String.valueOf(document.get("name")), String.valueOf(document.get("lat")), String.valueOf(document.get("lon")), String.valueOf(document.get("rate"))));
                                                     progressBarMain.setVisibility(View.GONE);
-                                                    googleMap.addMarker(new MarkerOptions().position(new LatLng(Double.valueOf(String.valueOf(document.get("lat"))),Double.valueOf(String.valueOf(document.get("lon")))))).setTag(String.valueOf(document.get("name")));
+                                                    googleMap.addMarker(new MarkerOptions().position(new LatLng(Double.valueOf(String.valueOf(document.get("lat"))), Double.valueOf(String.valueOf(document.get("lon")))))).setTag(String.valueOf(document.get("name")));
 
                                                 }
 
                                                 googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                                                     @Override
                                                     public boolean onMarkerClick(Marker marker) {
-                                                        if(marker.getTag() == "Tim Hortons"){
-                                                            InfoWindow infoWindow = new InfoWindow(getActivity(),"Tim Hortons");
+                                                        if (marker.getTag() == "Tim Hortons") {
+                                                            InfoWindow infoWindow = new InfoWindow(getActivity(), "Tim Hortons");
                                                             googleMap.setInfoWindowAdapter(infoWindow);
                                                             marker.showInfoWindow();
 
-                                                        }
-                                                        else if(marker.getTag() == "McDonalds"){
-                                                            InfoWindow infoWindow = new InfoWindow(getActivity(),"McDonalds");
+                                                        } else if (marker.getTag() == "McDonalds") {
+                                                            InfoWindow infoWindow = new InfoWindow(getActivity(), "McDonalds");
                                                             googleMap.setInfoWindowAdapter(infoWindow);
                                                             marker.showInfoWindow();
-                                                        }
-                                                        else if(marker.getTag() == "Pizza Pizza"){
-                                                            InfoWindow infoWindow = new InfoWindow(getActivity(),"Pizza Pizza");
+                                                        } else if (marker.getTag() == "Pizza Pizza") {
+                                                            InfoWindow infoWindow = new InfoWindow(getActivity(), "Pizza Pizza");
                                                             googleMap.setInfoWindowAdapter(infoWindow);
                                                             marker.showInfoWindow();
-                                                        }
-                                                        else if(marker.getTag() == "Starbucks"){
-                                                            InfoWindow infoWindow = new InfoWindow(getActivity(),"Starbucks");
+                                                        } else if (marker.getTag() == "Starbucks") {
+                                                            InfoWindow infoWindow = new InfoWindow(getActivity(), "Starbucks");
                                                             googleMap.setInfoWindowAdapter(infoWindow);
                                                             marker.showInfoWindow();
                                                         }
                                                         return true;
                                                     }
                                                 });
-
 
 
                                             }
@@ -265,50 +294,46 @@ public class MapFragment extends Fragment {
                             public void onComplete(@NonNull final Task<QuerySnapshot> task) {
                                 if (task.isSuccessful()) {
                                     list.clear();
-                                    if(task.getResult().size()==0){
+                                    if (task.getResult().size() == 0) {
                                         //TODO
                                         progressBarMain.setVisibility(View.GONE);
-                                    }else{
+                                    } else {
                                         mapFragment.getMapAsync(new OnMapReadyCallback() {
                                             @Override
                                             public void onMapReady(final GoogleMap googleMap) {
                                                 googleMap.clear();
 
                                                 for (QueryDocumentSnapshot document : task.getResult()) {
-                                                    list.add(new restaurantList(String.valueOf(document.get("name")),String.valueOf(document.get("lat")),String.valueOf(document.get("lon")),String.valueOf(document.get("rate"))));
+                                                    list.add(new restaurantList(String.valueOf(document.get("name")), String.valueOf(document.get("lat")), String.valueOf(document.get("lon")), String.valueOf(document.get("rate"))));
                                                     progressBarMain.setVisibility(View.GONE);
-                                                    googleMap.addMarker(new MarkerOptions().position(new LatLng(Double.valueOf(String.valueOf(document.get("lat"))),Double.valueOf(String.valueOf(document.get("lon")))))).setTag(String.valueOf(document.get("name")));
+                                                    googleMap.addMarker(new MarkerOptions().position(new LatLng(Double.valueOf(String.valueOf(document.get("lat"))), Double.valueOf(String.valueOf(document.get("lon")))))).setTag(String.valueOf(document.get("name")));
 
                                                 }
 
                                                 googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                                                     @Override
                                                     public boolean onMarkerClick(Marker marker) {
-                                                        if(marker.getTag() == "Tim Hortons"){
-                                                            InfoWindow infoWindow = new InfoWindow(getActivity(),"Tim Hortons");
+                                                        if (marker.getTag() == "Tim Hortons") {
+                                                            InfoWindow infoWindow = new InfoWindow(getActivity(), "Tim Hortons");
                                                             googleMap.setInfoWindowAdapter(infoWindow);
                                                             marker.showInfoWindow();
 
-                                                        }
-                                                        else if(marker.getTag() == "McDonalds"){
-                                                            InfoWindow infoWindow = new InfoWindow(getActivity(),"McDonalds");
+                                                        } else if (marker.getTag() == "McDonalds") {
+                                                            InfoWindow infoWindow = new InfoWindow(getActivity(), "McDonalds");
                                                             googleMap.setInfoWindowAdapter(infoWindow);
                                                             marker.showInfoWindow();
-                                                        }
-                                                        else if(marker.getTag() == "Pizza Pizza"){
-                                                            InfoWindow infoWindow = new InfoWindow(getActivity(),"Pizza Pizza");
+                                                        } else if (marker.getTag() == "Pizza Pizza") {
+                                                            InfoWindow infoWindow = new InfoWindow(getActivity(), "Pizza Pizza");
                                                             googleMap.setInfoWindowAdapter(infoWindow);
                                                             marker.showInfoWindow();
-                                                        }
-                                                        else if(marker.getTag() == "Starbucks"){
-                                                            InfoWindow infoWindow = new InfoWindow(getActivity(),"Starbucks");
+                                                        } else if (marker.getTag() == "Starbucks") {
+                                                            InfoWindow infoWindow = new InfoWindow(getActivity(), "Starbucks");
                                                             googleMap.setInfoWindowAdapter(infoWindow);
                                                             marker.showInfoWindow();
                                                         }
                                                         return true;
                                                     }
                                                 });
-
 
 
                                             }

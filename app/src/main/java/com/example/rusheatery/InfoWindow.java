@@ -20,12 +20,12 @@ import java.util.Locale;
 public class InfoWindow implements GoogleMap.InfoWindowAdapter {
 
     //variable
-    Context c;
+    private Context c;
 
     String name;
-    
+
     //constructor
-    public InfoWindow(Context c, String name){
+    public InfoWindow(Context c, String name) {
         this.name = name;
         this.c = c;
 
@@ -42,7 +42,7 @@ public class InfoWindow implements GoogleMap.InfoWindowAdapter {
     public View getInfoContents(Marker marker) {
 
         //view for showing  infoWindow
-        View view = ((Activity)c).getLayoutInflater().inflate(R.layout.info_window, null);
+        View view = ((Activity) c).getLayoutInflater().inflate(R.layout.info_window, null);
 
         //adding id to the  variable
         TextView textView1 = view.findViewById(R.id.textVIewInfoName);

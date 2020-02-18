@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "272714160937-o92sljv348eq3hrlvcslm7blb48t2cvv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.rusheatery",
+            "certificate_hash": "6fd0acdbb0672b1a60c2bb6b9a9240af4b10f828"
+          }
+        },
+        {
+          "client_id": "272714160937-ap88nplk9aq0cfqovn4nhv7gbsqq1b2f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.rusheatery",
+            "certificate_hash": "f017d2aa6f8c2e29a36c027f074b4c0b42e071ac"
+          }
+        },
+        {
           "client_id": "272714160937-46ljdvlcc8vmrjbh8gn30pahn2g8usa0.apps.googleusercontent.com",
           "client_type": 3
         }
