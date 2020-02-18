@@ -8,28 +8,15 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 
-import com.example.rusheatery.Fragment.HomeFragment;
+import com.example.rusheatery.Fragment.ProfileFragment;
 import com.example.rusheatery.Fragment.ListFragmentMain;
 import com.example.rusheatery.Fragment.MapFragment;
-import com.example.rusheatery.Help.restaurantList;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -57,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
                     fragment = new MapFragment();
 
                 }else{
-                    fragment = new HomeFragment();
+                    fragment = new ProfileFragment();
                 }
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.frameLayoutCustomer,fragment,"back");
@@ -77,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
     //adding fragment on create
     private void addFragment() {
-        Fragment fragment = new HomeFragment();
+        Fragment fragment = new ProfileFragment();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frameLayoutCustomer,fragment,null);
         fragmentTransaction.commit();

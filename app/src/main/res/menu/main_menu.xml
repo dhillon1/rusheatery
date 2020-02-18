@@ -8,8 +8,8 @@
         android:id="@+id/mapViewMain"
         android:icon="@drawable/map"/>
 
-    <item android:title="Home"
-        android:id="@+id/homeMain"
+    <item android:title="Profile"
+        android:id="@+id/profileMain"
         android:icon="@drawable/home"/>
 
 
