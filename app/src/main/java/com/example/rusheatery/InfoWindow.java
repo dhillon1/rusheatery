@@ -23,8 +23,7 @@ public class InfoWindow implements GoogleMap.InfoWindowAdapter {
     Context c;
 
     String name;
-
-
+    
     //constructor
     public InfoWindow(Context c, String name){
         this.name = name;

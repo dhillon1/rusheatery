@@ -75,7 +75,6 @@ public class ProfileFragment extends Fragment {
                         name.setText(String.valueOf(document.get("name")));
                         email.setText(String.valueOf(document.get("email")));
                         password.setText(String.valueOf(document.get("password")));
-
                     }
                 }
             }
