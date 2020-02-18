@@ -9,9 +9,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.rusheatery.Help.restaurantList;
 import com.example.rusheatery.R;
 
+import java.util.ArrayList;
+
 public class RestaurantListMain extends RecyclerView.Adapter<RestaurantListMain.ViewHolder> {
+
+    public ArrayList<restaurantList> list;
+
+    public RestaurantListMain(ArrayList<restaurantList> list){
+        this.list = list;
+    }
+
 
     @NonNull
     @Override
@@ -22,12 +32,16 @@ public class RestaurantListMain extends RecyclerView.Adapter<RestaurantListMain.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        restaurantList a = list.get(position);
+        holder.restaurantName.setText(a.getName());
+        holder.distance.setText("3 km");
+        holder.ratingBar.setRating(Integer.valueOf(a.getRate()));
 
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return list.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

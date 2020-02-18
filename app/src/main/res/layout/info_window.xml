@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--info window layout for data shown-->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+
+
+
+    <!--textName-->
+    <TextView
+        android:id="@+id/textVIewInfoName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:hint="Tommy"
+        android:layout_marginTop="10dp"
+        android:textColor="#744848"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="30dp"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <!--textCity-->
+    <TextView
+        android:id="@+id/textViewInfoCityName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="City: "
+        android:textColor="#000000"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="15dp"
+        app:layout_constraintTop_toBottomOf="@id/textVIewInfoName"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <!--city-->
+    <TextView
+        android:id="@+id/textViewInfoCity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="Toronto"
+        android:layout_marginLeft="15dp"
+        android:textColor="#000000"
+        app:layout_constraintTop_toBottomOf="@id/textVIewInfoName"
+        app:layout_constraintLeft_toRightOf="@id/textViewInfoCityName"/>
+
+
+    <!--phone-->
+    <TextView
+        android:id="@+id/textViewInfoRating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="Rating : 4/5"
+        android:layout_marginLeft="15dp"
+        android:textColor="#000000"
+        app:layout_constraintTop_toBottomOf="@id/textViewInfoCity"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

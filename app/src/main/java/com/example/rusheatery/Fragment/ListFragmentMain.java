@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -14,8 +15,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.rusheatery.Adapter.RestaurantListMain;
 import com.example.rusheatery.Help.restaurantList;
 import com.example.rusheatery.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -31,11 +35,12 @@ import java.util.ArrayList;
 public class ListFragmentMain extends Fragment {
 
     private BottomNavigationView bottomNavigationView;
+    public static ArrayList<restaurantList> list;
     private EditText search;
     private Button searchButton;
-    private static ArrayList<restaurantList> list;
     private TextView resetFilters;
     private RecyclerView recyclerViewList;
+    private ProgressBar progressBarList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,6 +62,9 @@ public class ListFragmentMain extends Fragment {
         search = view.findViewById(R.id.searchList);
         searchButton = view.findViewById(R.id.searchButtonList);
         resetFilters = view.findViewById(R.id.resetFiltersList);
+        recyclerViewList = view.findViewById(R.id.recyclerViewList);
+        progressBarList = view.findViewById(R.id.progressBarList);
+        list = new ArrayList<>();
         Menu menu = bottomNavigationView.getMenu();
         if (!menu.findItem(R.id.listViewMain).isChecked()) {
             menu.findItem(R.id.listViewMain).setChecked(true);
@@ -67,6 +75,7 @@ public class ListFragmentMain extends Fragment {
     public void onResume() {
         super.onResume();
 
+        progressBarList.setVisibility(View.VISIBLE);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("restaurant")
                 .get()
@@ -76,14 +85,23 @@ public class ListFragmentMain extends Fragment {
                         if (task.isSuccessful()) {
                             if(task.getResult().size()==0){
                                 //TODO
+                                progressBarList.setVisibility(View.GONE);
                             }else{
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     list.add(new restaurantList(String.valueOf(document.get("name")),String.valueOf(document.get("lat")),String.valueOf(document.get("lon")),String.valueOf(document.get("rate"))));
 
                                 }
+                                RestaurantListMain adapter = new RestaurantListMain(list);
+                                recyclerViewList.setAdapter(adapter);
+                                recyclerViewList.setLayoutManager(new LinearLayoutManager(getActivity()));
+                                progressBarList.setVisibility(View.GONE);
+
+
                             }
                         } else {
                             //   Log.d(TAG, "Error getting documents: ", task.getException());
+                            Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            progressBarList.setVisibility(View.GONE);
                         }
                     }
                 });
@@ -94,6 +112,7 @@ public class ListFragmentMain extends Fragment {
             public void onClick(View v) {
                 String search1 = search.getText().toString().trim();
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
+                progressBarList.setVisibility(View.VISIBLE);
 
                 db.collection("restaurant")
                         .whereEqualTo("name", search1)
@@ -105,14 +124,28 @@ public class ListFragmentMain extends Fragment {
                                     list.clear();
                                     if(task.getResult().size()==0){
                                         //TODO
+                                        list.clear();
+                                        RestaurantListMain adapter = new RestaurantListMain(list);
+                                        recyclerViewList.setAdapter(adapter);
+                                        recyclerViewList.setLayoutManager(new LinearLayoutManager(getActivity()));
+                                        progressBarList.setVisibility(View.GONE);
+                                        Toast.makeText(getActivity(),"No record found",Toast.LENGTH_SHORT).show();
                                     }else{
                                         for (QueryDocumentSnapshot document : task.getResult()) {
                                             list.add(new restaurantList(String.valueOf(document.get("name")),String.valueOf(document.get("lat")),String.valueOf(document.get("lon")),String.valueOf(document.get("rate"))));
                                         }
+                                        RestaurantListMain adapter = new RestaurantListMain(list);
+                                        recyclerViewList.setAdapter(adapter);
+                                        recyclerViewList.setLayoutManager(new LinearLayoutManager(getActivity()));
+                                        progressBarList.setVisibility(View.GONE);
                                     }
+
                                 } else {
                                     //   Log.d(TAG, "Error getting documents: ", task.getException());
+                                    Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                    progressBarList.setVisibility(View.GONE);
                                 }
+
                             }
                         });
             }
@@ -121,6 +154,7 @@ public class ListFragmentMain extends Fragment {
         resetFilters.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressBarList.setVisibility(View.VISIBLE);
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 db.collection("restaurant")
                         .get()
@@ -131,15 +165,22 @@ public class ListFragmentMain extends Fragment {
                                     list.clear();
                                     if(task.getResult().size()==0){
                                         //TODO
+                                        progressBarList.setVisibility(View.GONE);
                                     }else{
                                         for (QueryDocumentSnapshot document : task.getResult()) {
                                             list.add(new restaurantList(String.valueOf(document.get("name")),String.valueOf(document.get("lat")),String.valueOf(document.get("lon")),String.valueOf(document.get("rate"))));
-
                                         }
+                                        RestaurantListMain adapter = new RestaurantListMain(list);
+                                        recyclerViewList.setAdapter(adapter);
+                                        recyclerViewList.setLayoutManager(new LinearLayoutManager(getActivity()));
+                                        progressBarList.setVisibility(View.GONE);
                                     }
                                 } else {
                                     //   Log.d(TAG, "Error getting documents: ", task.getException());
+                                    Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                    progressBarList.setVisibility(View.GONE);
                                 }
+
                             }
                         });
             }

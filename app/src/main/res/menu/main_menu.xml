@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:title="List View"
-        android:id="@+id/listViewMain"/>
+        android:id="@+id/listViewMain"
+        android:icon="@drawable/list"/>
 
     <item android:title="Map View"
-        android:id="@+id/mapViewMain"/>
+        android:id="@+id/mapViewMain"
+        android:icon="@drawable/map"/>
 
     <item android:title="Home"
-        android:id="@+id/homeMain"/>
+        android:id="@+id/homeMain"
+        android:icon="@drawable/home"/>
 
 
 </menu>
